@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:music_app_project/view/home_screen.dart';
+import 'package:music_app_project/widget/custom_bottom_nav.dart';
+import 'package:provider/provider.dart';
+
+import 'provider/navigation_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => NavigationProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -10,6 +18,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: HomeScreen());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const CustomBottomNav(),
+    );
   }
 }
