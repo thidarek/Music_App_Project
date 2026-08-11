@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:music_app_project/view/home_screen.dart';
+import 'package:music_app_project/view/library_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+     runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -10,6 +10,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: HomeScreen());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Music App',
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: const Color(0xFF0B0E17),
+      ),
+      home: LibraryScreen(),
+    );
   }
 }
