@@ -1,21 +1,79 @@
-class Song {
-  int id;
-  String title;
-  String artist;
-  String image;
-  String duration;
-  bool isFavorite;
 
-  Song({
-    required this.id,
-    required this.title,
-    required this.artist,
-    required this.image,
-    required this.duration,
-    this.isFavorite = false,
-  });
-}
+import 'package:music_app_project/models/artist.dart';
+import 'package:music_app_project/models/playlist.dart';
+import 'package:music_app_project/models/song.dart';
 
+//Artist
+List<Artist> artists = [
+  Artist(
+    id: 1,
+    name: "The Weeknd",
+    image: "assets/images/artists/the_weeknd.jpg",
+    bio: "Canadian singer known for R&B, pop, and synthwave music.",
+  ),
+  Artist(
+    id: 2,
+    name: "Ed Sheeran",
+    image: "assets/images/artists/ed_sheeran.jpg",
+    bio: "English singer-songwriter famous for acoustic pop hits.",
+  ),
+  Artist(
+    id: 3,
+    name: "Taylor Swift",
+    image: "assets/images/artists/taylor_swift.jpg",
+    bio: "American singer-songwriter known for country and pop music.",
+  ),
+  Artist(
+    id: 4,
+    name: "Billie Eilish",
+    image: "assets/images/artists/billie_eilish.jpg",
+    bio: "Grammy-winning artist recognized for her unique alternative pop style.",
+  ),
+  Artist(
+    id: 5,
+    name: "Imagine Dragons",
+    image: "assets/images/artists/imagine_dragons.jpg",
+    bio: "American pop rock band best known for energetic anthems.",
+  ),
+  Artist(
+    id: 6,
+    name: "Dua Lipa",
+    image: "assets/images/artists/dua_lipa.jpg",
+    bio: "British-Albanian pop singer with multiple chart-topping songs.",
+  ),
+  Artist(
+    id: 7,
+    name: "Justin Bieber",
+    image: "assets/images/artists/justin_bieber.jpg",
+    bio: "Canadian pop singer with numerous international hits.",
+  ),
+  Artist(
+    id: 8,
+    name: "Adele",
+    image: "assets/images/artists/adele.jpg",
+    bio: "British singer celebrated for her soulful voice and emotional ballads.",
+  ),
+  Artist(
+    id: 9,
+    name: "Bruno Mars",
+    image: "assets/images/artists/bruno_mars.jpg",
+    bio: "American singer-songwriter blending pop, funk, soul, and R&B.",
+  ),
+  Artist(
+    id: 10,
+    name: "Maroon 5",
+    image: "assets/images/artists/maroon5.jpg",
+    bio: "American pop rock band led by vocalist Adam Levine.",
+  ),
+  Artist(
+  id: 11,
+  name: "ENHYPEN",
+  image: "assets/images/artists/enhypen.jpg",
+  bio: "South Korean boy group formed through the survival show I-LAND, known for songs like Bite Me, FEVER, Drunk-Dazed, and Sweet Venom.",
+),
+];
+
+// Song
 List<Song> songs = [
   Song(
     id: 1,
@@ -198,3 +256,48 @@ List<Song> songs = [
     duration: "3:04",
   ),
 ];
+
+//Playlist
+List<Playlist> playlists = [
+  Playlist(id: 1, name: "Top Hits", songs: songs.sublist(0, 5)),
+  Playlist(id: 2, name: "Workout Mix", songs: songs.sublist(5, 10)),
+  Playlist(id: 3, name: "Chill Vibes", songs: songs.sublist(10, 15)),
+  Playlist(id: 4, name: "Romantic Songs", songs: songs.sublist(15, 20)),
+  Playlist(
+    id: 5,
+    name: "Morning Boost",
+    songs: [songs[0], songs[3], songs[7], songs[12], songs[18]],
+  ),
+  Playlist(
+    id: 6,
+    name: "Late Night",
+    songs: [songs[1], songs[4], songs[8], songs[11], songs[17]],
+  ),
+  Playlist(
+    id: 7,
+    name: "Road Trip",
+    songs: [songs[2], songs[5], songs[9], songs[13], songs[19]],
+  ),
+  Playlist(
+    id: 8,
+    name: "Acoustic Favorites",
+
+    songs: [songs[0], songs[5], songs[10], songs[15], songs[18]],
+  ),
+  Playlist(
+    id: 9,
+    name: "Party Time",
+    songs: [songs[2], songs[6], songs[8], songs[14], songs[16]],
+  ),
+  Playlist(
+    id: 10,
+    name: "Relax & Study",
+    songs: [songs[1], songs[4], songs[9], songs[12], songs[19]],
+  ),
+  Playlist(
+    id: 10,
+    name: "ENHYPEN Collection",
+    songs: [songs[21], songs[22], songs[23], songs[24], songs[25]],
+  ),
+];
+

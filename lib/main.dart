@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:music_app_project/widget/custom_bottom_nav.dart';
+import 'package:music_app_project/widgets/navigation/custom_bottom_nav.dart';
 import 'package:provider/provider.dart';
 
-import 'provider/navigation_provider.dart';
+import 'providers/navigation_provider.dart';
 
 void main() {
   runApp(

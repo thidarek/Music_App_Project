@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:music_app_project/provider/navigation_provider.dart';
+import 'package:music_app_project/core/constants/app_colors.dart';
+import 'package:music_app_project/core/constants/app_strings.dart';
+import 'package:music_app_project/providers/navigation_provider.dart';
 import 'package:music_app_project/view/home_screen.dart';
 import 'package:music_app_project/view/library_screen.dart';
 import 'package:music_app_project/view/playlist_screen.dart';
@@ -23,7 +25,7 @@ class CustomBottomNav extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xff111827),
+      backgroundColor: AppColors.navBarBackground,
 
       body: IndexedStack(index: navigation.currentIndex, children: screens),
 
@@ -31,13 +33,13 @@ class CustomBottomNav extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           decoration: BoxDecoration(
-            color: const Color(0xff1C1F2E),
+            color: AppColors.navBarBackground,
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(.25),
                 blurRadius: 20,
-                offset: const Offset(0, 8),
+                offset: Offset(0, 8),
               ),
             ],
           ),
@@ -52,36 +54,36 @@ class CustomBottomNav extends StatelessWidget {
 
               type: BottomNavigationBarType.fixed,
               elevation: 0,
-              backgroundColor: Colors.transparent,
+              backgroundColor: AppColors.navBarBackground,
 
-              selectedItemColor: const Color(0xff8B5CF6),
-              unselectedItemColor: Colors.white54,
+              selectedItemColor: AppColors.accentPurple,
+              unselectedItemColor: AppColors.navBarInactiveIcon,
 
               selectedFontSize: 11,
               unselectedFontSize: 11,
 
               iconSize: 22,
 
-              items: const [
+              items: [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home_rounded),
-                  label: "Home",
+                  label: AppStrings.navHome,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.search_rounded),
-                  label: "Search",
+                  label: AppStrings.navSearch,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.library_music_rounded),
-                  label: "Library",
+                  label: AppStrings.navLibrary,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.queue_music_rounded),
-                  label: "Playlist",
+                  label: AppStrings.navPlaylist,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person_outline_rounded),
-                  label: "Profile",
+                  label: AppStrings.navProfile,
                 ),
               ],
             ),
