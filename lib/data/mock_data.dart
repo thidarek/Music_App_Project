@@ -297,7 +297,7 @@ List<Playlist> playlists = [
   Playlist(
     id: 10,
     name: "ENHYPEN Collection",
-    songs: [songs[21], songs[22], songs[23], songs[24], songs[25]],
+    songs: [songs[20], songs[21], songs[22], songs[23], songs[24]],
   ),
 ];
 
