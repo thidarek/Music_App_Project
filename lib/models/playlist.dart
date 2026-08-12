@@ -1,7 +1,7 @@
 import 'package:music_app_project/models/song.dart';
 
 class Playlist {
-  int id;
+  String id;
   String name;
   List<Song> songs;
 

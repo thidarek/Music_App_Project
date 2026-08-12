@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:music_app_project/widgets/navigation/custom_bottom_nav.dart';
+import 'package:music_app_project/widgets/custom_bottom_nav.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/navigation_provider.dart';
+import 'providers/favorite_provider.dart';
+import 'providers/player_provider.dart';
+// import 'providers/playlist_provider.dart';
+import 'providers/search_provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => NavigationProvider(),
-      child: const MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
+        ChangeNotifierProvider(create: (_) => FavoriteProvider()),
+        ChangeNotifierProvider(create: (_) => PlayerProvider()),
+        // ChangeNotifierProvider(create: (_) => PlaylistProvider()),
+        ChangeNotifierProvider(create: (_) => SearchProvider()),
+      ],
+      child: MyApp(),
     ),
   );
 }
