@@ -259,80 +259,45 @@ List<Song> songs = [
 
 //Playlist
 List<Playlist> playlists = [
-<<<<<<< HEAD
-  Playlist(id: '1', name: "Top Hits", songs: songs.sublist(0, 5)),
-  Playlist(id: '2', name: "Workout Mix", songs: songs.sublist(5, 10)),
-  Playlist(id: '3', name: "Chill Vibes", songs: songs.sublist(10, 15)),
-  Playlist(id: '4', name: "Romantic Songs", songs: songs.sublist(15, 20)),
-  Playlist(
-    id: '5',
-=======
   Playlist(id: 1, name: "Top Hits", songs: songs.sublist(0, 5)),
   Playlist(id: 2, name: "Workout Mix", songs: songs.sublist(5, 10)),
   Playlist(id: 3, name: "Chill Vibes", songs: songs.sublist(10, 15)),
   Playlist(id: 4, name: "Romantic Songs", songs: songs.sublist(15, 20)),
   Playlist(
     id: 5,
->>>>>>> 12adf3532103ab96583c0fde44877e5b53021e42
     name: "Morning Boost",
     songs: [songs[0], songs[3], songs[7], songs[12], songs[18]],
   ),
   Playlist(
-<<<<<<< HEAD
-    id: '6',
-=======
     id: 6,
->>>>>>> 12adf3532103ab96583c0fde44877e5b53021e42
     name: "Late Night",
     songs: [songs[1], songs[4], songs[8], songs[11], songs[17]],
   ),
   Playlist(
-<<<<<<< HEAD
-    id: '7',
-=======
     id: 7,
->>>>>>> 12adf3532103ab96583c0fde44877e5b53021e42
     name: "Road Trip",
     songs: [songs[2], songs[5], songs[9], songs[13], songs[19]],
   ),
   Playlist(
-<<<<<<< HEAD
-    id: '8',
-=======
     id: 8,
->>>>>>> 12adf3532103ab96583c0fde44877e5b53021e42
     name: "Acoustic Favorites",
 
     songs: [songs[0], songs[5], songs[10], songs[15], songs[18]],
   ),
   Playlist(
-<<<<<<< HEAD
-    id: '9',
-=======
     id: 9,
->>>>>>> 12adf3532103ab96583c0fde44877e5b53021e42
     name: "Party Time",
     songs: [songs[2], songs[6], songs[8], songs[14], songs[16]],
   ),
   Playlist(
-<<<<<<< HEAD
-    id: '10',
-=======
     id: 10,
->>>>>>> 12adf3532103ab96583c0fde44877e5b53021e42
     name: "Relax & Study",
     songs: [songs[1], songs[4], songs[9], songs[12], songs[19]],
   ),
   Playlist(
-<<<<<<< HEAD
-    id: '11',
-    name: "ENHYPEN Collection",
-    songs: [songs[21], songs[22], songs[23], songs[24], songs[25]],
-=======
     id: 10,
     name: "ENHYPEN Collection",
     songs: [songs[20], songs[21], songs[22], songs[23], songs[24]],
->>>>>>> 12adf3532103ab96583c0fde44877e5b53021e42
   ),
 ];
 
