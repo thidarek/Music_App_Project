@@ -1,7 +1,6 @@
 // lib/view/login.dart
 
 import 'package:flutter/material.dart';
-import 'package:music_app_project/view/home_screen.dart';
 import 'package:music_app_project/widgets/navigation/custom_bottom_nav.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';

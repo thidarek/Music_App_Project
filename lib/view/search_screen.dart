@@ -1,52 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:music_app_project/providers/search_provider.dart';
+import 'package:music_app_project/data/mock_data.dart';
+import 'package:music_app_project/providers/player_provider.dart';
+import 'package:music_app_project/view/playlist_detail_screen.dart';
+import 'package:provider/provider.dart';
+// import 'search_provider.dart'; // Adjust import path if needed
 
-
-
-/// This file uses hardcoded mock data (see the lists/maps below) so the
-/// layout can be reviewed and merged before the real data layer is ready.
-/// Every place that should eventually read from a Provider is marked with
-/// a `// PROVIDER:` comment — search for that tag to find all the spots
-/// that need wiring once search_provider.dart / player_provider.dart are
-/// ready to plug in.
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 
-  // ---------------------------------------------------------------------
-  // MOCK DATA — replace with real data via providers (see PROVIDER tags).
-  // ---------------------------------------------------------------------
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
 
-  // PROVIDER: replace with `context.watch<SearchProvider>().recentSearches`
-  static const List<String> _recentSearches = [
-    'Arctic Monkeys',
-    'Lofi Beats',
-    'Interstellar OST',
-    'Billie Eilish',
-    'Jazz Fusion',
-  ];
-
-  // PROVIDER: categories could come from a provider too if they're
-  // data-driven later; for now they're static design content.
-  static const List<_CategoryData> _categories = [
-    _CategoryData('Rock', [Color(0xFFE8533A), Color(0xFFE0873A)]),
-    _CategoryData('Jazz', [Color(0xFFE0A93A), Color(0xFFE8C93A)]),
-    _CategoryData('Pop', [Color(0xFFD84FC0), Color(0xFFB84FE8)]),
-    _CategoryData('Lofi', [Color(0xFF4F6FE8), Color(0xFF6F4FE0)]),
-  ];
-
-  // PROVIDER: replace with `context.watch<SearchProvider>().trendingSongs`
-  // or a dedicated HomeProvider, depending on where "trending" logic lives.
-  static const List<_SongData> _trendingSongs = [
-    _SongData('Midnight City', 'Neon Echoes', '3:42'),
-    _SongData('Fluorescence', 'Arcade Glitch', '4:15'),
-    _SongData('Shadow Work', 'The Voids', '2:58'),
-  ];
-
-  // PROVIDER: replace with `context.watch<PlayerProvider>()` — currentSong,
-  // isPlaying, and progress (0.0–1.0) would all come from there instead of
-  // being hardcoded like this.
-  static const String _nowPlayingTitle = 'Midnight City';
-  static const String _nowPlayingArtist = 'Neon Echoes';
-  static const double _nowPlayingProgress = 0.35;
+class _SearchScreenState extends State<SearchScreen> {
+  late TextEditingController _searchController;
 
   static const Color _background = Color(0xFF0D1220);
   static const Color _cardSurface = Color(0xFF1A2033);
@@ -54,42 +22,68 @@ class SearchScreen extends StatelessWidget {
   static const Color _textPrimary = Colors.white;
   static const Color _textSecondary = Color(0xFF9CA3B5);
 
+  // Static fallback categories for browsing
+  static const List<_CategoryData> _categories = [
+    _CategoryData('Rock', [Color(0xFFE8533A), Color(0xFFE0873A)]),
+    _CategoryData('Jazz', [Color(0xFFE0A93A), Color(0xFFE8C93A)]),
+    _CategoryData('Pop', [Color(0xFFD84FC0), Color(0xFFB84FE8)]),
+    _CategoryData('Lofi', [Color(0xFF4F6FE8), Color(0xFF6F4FE0)]),
+  ];
+
+  static const List<_SongData> _trendingSongs = [
+    _SongData('Midnight City', 'Neon Echoes', '3:42'),
+    _SongData('Fluorescence', 'Arcade Glitch', '4:15'),
+    _SongData('Shadow Work', 'The Voids', '2:58'),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<SearchProvider>();
+      // Populate provider searchable list with song titles (and artist names)
+      final audioIds = songs.map((s) => '${s.title} - ${s.artist}').toList();
+      provider.setAudioList(audioIds);
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // IMPORTANT: no Scaffold and no bottomNavigationBar here.
-    // This screen lives inside CustomBottomNav's IndexedStack, which
-    // already owns the single Scaffold + bottom nav bar for the whole
-    // app. Adding a second Scaffold/nav bar at this level is what was
-    // producing the doubled nav bar and the squeezed mini player in the
-    // screenshot — every tab must return plain content, not its own
-    // Scaffold shell.
+    final searchProvider = context.watch<SearchProvider>();
+
     return Container(
       color: _background,
       child: SafeArea(
-        // Don't apply bottom safe-area padding here — CustomBottomNav's
-        // own SafeArea around the nav bar already accounts for it, and
-        // doing it twice pushes content up unnecessarily.
         bottom: false,
         child: Stack(
           children: [
-            // Main scrollable content: header, search bar, sections.
             CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(child: _buildHeader()),
-                SliverToBoxAdapter(child: _buildSearchBar()),
-                SliverToBoxAdapter(child: _buildRecentSearches()),
-                SliverToBoxAdapter(child: _buildBrowseCategories()),
-                SliverToBoxAdapter(child: _buildTrendingSongs(context)),
-                // Extra bottom padding so the last song isn't hidden
-                // behind the floating mini player or the outer nav bar.
+                SliverToBoxAdapter(child: _buildSearchBar(context, searchProvider)),
+                
+                // Show dynamic search results if user is actively searching
+                if (searchProvider.isSearching) ...[
+                  SliverToBoxAdapter(child: _buildSearchResults(searchProvider)),
+                ] else ...[
+                  // Default discovery view when search field is empty
+                  SliverToBoxAdapter(child: _buildRecentSearches(context, searchProvider)),
+                  SliverToBoxAdapter(child: _buildBrowseCategories(searchProvider)),
+                  SliverToBoxAdapter(child: _buildTrendingSongs(context)),
+                ],
+
                 const SliverToBoxAdapter(child: SizedBox(height: 140)),
               ],
             ),
-            // Floating mini player, pinned near the bottom of the screen,
-            // sitting above the scroll content. Consider hoisting this up
-            // to CustomBottomNav instead (see note below _buildMiniPlayer)
-            // so it persists across tabs rather than living inside Search
-            // only.
+            
+            // Floating Mini Player
             Positioned(
               left: 16,
               right: 16,
@@ -102,18 +96,14 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  /// Top row: user/album avatar, screen title, notification bell.
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: Row(
         children: [
-          // Small circular thumbnail (e.g. current playlist/album art).
           const CircleAvatar(
             radius: 20,
             backgroundColor: _cardSurface,
-            // PROVIDER: swap for a NetworkImage/AssetImage once real
-            // artwork is available.
             child: Icon(Icons.person, color: _textSecondary, size: 20),
           ),
           const SizedBox(width: 12),
@@ -126,15 +116,13 @@ class SearchScreen extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          Icon(Icons.notifications_none, color: _accentPurple, size: 26),
+          const Icon(Icons.notifications_none, color: _accentPurple, size: 26),
         ],
       ),
     );
   }
 
-  /// Rounded search input with a leading search icon and trailing mic icon.
-  /// UI only — no controller/onChanged wired up here on purpose.
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(BuildContext context, SearchProvider searchProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
@@ -148,23 +136,130 @@ class SearchScreen extends StatelessWidget {
           children: [
             const Icon(Icons.search, color: _textSecondary, size: 20),
             const SizedBox(width: 10),
-            const Expanded(
-              // PROVIDER: replace with a real TextField bound to
-              // SearchProvider.search() once logic is wired up.
-              child: Text(
-                'Artists, songs, or podcasts',
-                style: TextStyle(color: _textSecondary, fontSize: 14),
+            Expanded(
+              child: TextField(
+                controller: _searchController,
+                style: const TextStyle(color: _textPrimary, fontSize: 14),
+                decoration: const InputDecoration(
+                  hintText: 'Artists, songs, or podcasts',
+                  hintStyle: TextStyle(color: _textSecondary, fontSize: 14),
+                  border: InputBorder.none,
+                  isDense: true,
+                ),
+                onChanged: (value) {
+                  searchProvider.setSearchQuery(value);
+                },
               ),
             ),
-            const Icon(Icons.mic_none, color: _accentPurple, size: 22),
+            if (searchProvider.query.isNotEmpty)
+              GestureDetector(
+                onTap: () {
+                  _searchController.clear();
+                  searchProvider.clearSearch();
+                },
+                child: const Icon(Icons.close, color: _textSecondary, size: 20),
+              )
+            else
+              const Icon(Icons.mic_none, color: _accentPurple, size: 22),
           ],
         ),
       ),
     );
   }
 
-  /// "Recent Searches" title + clear-all action, then a wrap of pill chips.
-  Widget _buildRecentSearches() {
+  Widget _buildSearchResults(SearchProvider searchProvider) {
+    final results = searchProvider.searchResults;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Results (${results.length})',
+            style: const TextStyle(
+              color: _textPrimary,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+              if (results.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 30),
+              child: Center(
+                child: Text(
+                  'No matching songs found',
+                  style: TextStyle(color: _textSecondary, fontSize: 14),
+                ),
+              ),
+            )
+          else
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: results.length,
+              itemBuilder: (context, index) {
+                final songTitle = results[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: InkWell(
+                    onTap: () {
+                      // Try to find matching Song by title or title - artist
+                      final match = songs.firstWhere(
+                        (s) => ('${s.title} - ${s.artist}').toLowerCase() == songTitle.toLowerCase() || s.title.toLowerCase() == songTitle.toLowerCase(),
+                        orElse: () => songs.first,
+                      );
+                      // Play the song and open detail screen
+                      context.read<PlayerProvider>().playSong(match);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => SongDetailScreen(song: match, playlistName: 'Search')),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: _cardSurface,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(Icons.music_note, color: _accentPurple, size: 22),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            songTitle,
+                            style: const TextStyle(
+                              color: _textPrimary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const Icon(Icons.play_arrow_rounded, color: _textSecondary, size: 24),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecentSearches(BuildContext context, SearchProvider searchProvider) {
+    final recentSearches = searchProvider.getRecentSearches();
+
+    if (recentSearches.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
       child: Column(
@@ -181,41 +276,53 @@ class SearchScreen extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              // PROVIDER: onTap -> context.read<SearchProvider>().clearRecentSearches()
-              const Text(
-                'CLEAR ALL',
-                style: TextStyle(
-                  color: _accentPurple,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.5,
+              GestureDetector(
+                onTap: () => searchProvider.clearHistory(),
+                child: const Text(
+                  'CLEAR ALL',
+                  style: TextStyle(
+                    color: _accentPurple,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 14),
-          // Wrap lets chips flow onto multiple rows, matching the design.
           Wrap(
             spacing: 10,
             runSpacing: 10,
-            children: _recentSearches.map((term) {
-              return Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: _cardSurface,
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                // PROVIDER: wrap in GestureDetector -> re-run
-                // SearchProvider.search(term) on tap.
-                child: Text(
-                  term,
-                  style: const TextStyle(
-                    color: _textPrimary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
+            children: recentSearches.map((term) {
+              return GestureDetector(
+                onTap: () {
+                  _searchController.text = term;
+                  searchProvider.setSearchQuery(term);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: _cardSurface,
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        term,
+                        style: const TextStyle(
+                          color: _textPrimary,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      GestureDetector(
+                        onTap: () => searchProvider.removeFromHistory(term),
+                        child: const Icon(Icons.close, color: _textSecondary, size: 14),
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -226,8 +333,7 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  /// "Browse Categories" title + 2x2 grid of gradient cards.
-  Widget _buildBrowseCategories() {
+  Widget _buildBrowseCategories(SearchProvider searchProvider) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 28, 16, 0),
       child: Column(
@@ -254,7 +360,13 @@ class SearchScreen extends StatelessWidget {
             ),
             itemBuilder: (context, index) {
               final category = _categories[index];
-              return _buildCategoryCard(category);
+              return GestureDetector(
+                onTap: () {
+                  _searchController.text = category.name;
+                  searchProvider.setSearchQuery(category.name);
+                },
+                child: _buildCategoryCard(category),
+              );
             },
           ),
         ],
@@ -262,12 +374,8 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  /// Single gradient category card with the genre name in the top-left
-  /// and a small rotated "cover art" square in the bottom-right corner.
   Widget _buildCategoryCard(_CategoryData category) {
     return Container(
-      // PROVIDER: onTap -> navigate to a filtered results view / call
-      // SearchProvider.search(category.name).
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -288,9 +396,6 @@ class SearchScreen extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          // Decorative rotated square standing in for cover art.
-          // PROVIDER: swap the icon for a real album image once artwork
-          // per category/genre is available.
           Positioned(
             right: -6,
             bottom: -10,
@@ -316,7 +421,6 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  /// "Trending Songs" title + vertical list of song rows.
   Widget _buildTrendingSongs(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 28, 16, 0),
@@ -332,24 +436,17 @@ class SearchScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          // PROVIDER: replace this static map() with a ListView.builder
-          // over `context.watch<SearchProvider>().trendingSongs`.
           ..._trendingSongs.map((song) => _buildSongRow(song)),
-          
         ],
       ),
     );
   }
 
-  /// Single trending-song row: artwork placeholder, title/artist, duration,
-  /// and an overflow menu.
   Widget _buildSongRow(_SongData song) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          // PROVIDER: swap for real artwork (song.imageUrl) once song
-          // model data is passed in instead of mock strings.
           Container(
             width: 48,
             height: 48,
@@ -385,16 +482,12 @@ class SearchScreen extends StatelessWidget {
             style: const TextStyle(color: _textSecondary, fontSize: 12),
           ),
           const SizedBox(width: 8),
-          // PROVIDER: onPressed -> show a menu with "Add to playlist",
-          // "Favorite", etc., calling PlaylistProvider / FavoriteProvider.
           const Icon(Icons.more_vert, color: _textSecondary, size: 18),
         ],
       ),
     );
   }
 
-  /// Floating mini player: artwork, title/artist, cast icon, play/pause,
-  /// and a thin progress bar along the bottom edge.
   Widget _buildMiniPlayer() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -406,7 +499,6 @@ class SearchScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              // PROVIDER: swap for the actual now-playing artwork.
               Container(
                 width: 40,
                 height: 40,
@@ -417,21 +509,20 @@ class SearchScreen extends StatelessWidget {
                 child: const Icon(Icons.album, color: _textSecondary, size: 18),
               ),
               const SizedBox(width: 10),
-              Expanded(
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // PROVIDER: context.watch<PlayerProvider>().currentSong.title
-                    const Text(
-                      _nowPlayingTitle,
+                    Text(
+                      'Midnight City',
                       style: TextStyle(
                         color: _textPrimary,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const Text(
-                      _nowPlayingArtist,
+                    Text(
+                      'Neon Echoes',
                       style: TextStyle(color: _textSecondary, fontSize: 11),
                     ),
                   ],
@@ -439,47 +530,35 @@ class SearchScreen extends StatelessWidget {
               ),
               const Icon(Icons.cast_connected, color: _textSecondary, size: 20),
               const SizedBox(width: 14),
-              // PROVIDER: onTap -> context.read<PlayerProvider>().togglePlayPause()
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 18,
                 backgroundColor: _accentPurple,
-                child: const Icon(Icons.pause, color: Colors.white, size: 18),
+                child: Icon(Icons.pause, color: Colors.white, size: 18),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          // Thin progress bar showing playback position.
-          // PROVIDER: value should come from PlayerProvider's current
-          // position / total duration.
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: _nowPlayingProgress,
+            child: const LinearProgressIndicator(
+              value: 0.35,
               minHeight: 3,
               backgroundColor: _background,
-              valueColor: const AlwaysStoppedAnimation(_accentPurple),
+              valueColor: AlwaysStoppedAnimation(_accentPurple),
             ),
           ),
         ],
       ),
     );
   }
-
-  // Bottom nav intentionally removed from this file — CustomBottomNav
-  // (the widget you pasted) is the single source of truth for navigation
-  // and already renders it once for every tab via IndexedStack.
 }
 
-/// Simple data holder for a browse-category card (UI mock only).
-/// Replace with your real Category/Genre model if one exists.
 class _CategoryData {
   final String name;
   final List<Color> gradientColors;
   const _CategoryData(this.name, this.gradientColors);
 }
 
-/// Simple data holder for a trending song row (UI mock only).
-/// Replace with your real `Song` model from models/song.dart.
 class _SongData {
   final String title;
   final String artist;
