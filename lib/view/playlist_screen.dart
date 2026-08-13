@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:music_app_project/data/mock_data.dart';
+import 'package:music_app_project/providers/player_provider.dart';
+import 'package:music_app_project/view/playlist_detail_screen.dart';
+import 'package:provider/provider.dart';
 
 
 import '../models/playlist.dart';
@@ -309,7 +312,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             itemCount: playlist.songs.length,
             itemBuilder: (context, index) {
               final song = playlist.songs[index];
-              return _buildSongItem(song);
+              return _buildSongItem(context, song);
             },
           ),
         ],
@@ -318,56 +321,76 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   }
 
   // Song Tile
-  Widget _buildSongItem(Song song) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.03),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: ListTile(
-        contentPadding: EdgeInsets.zero,
-        leading: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: Colors.white10,
-            borderRadius: BorderRadius.circular(10),
-            image: song.image.isNotEmpty
-                ? DecorationImage(
-                    image: NetworkImage(song.image),
-                    fit: BoxFit.cover,
-                  )
-                : null,
-          ),
-          child: song.image.isEmpty
-              ? const Icon(Icons.music_note, color: Colors.white54)
+  
+  Widget _buildSongItem(BuildContext context, Song song) {
+  // Find associated playlist safely
+  final playlistName = playlists
+      .firstWhere(
+        (p) => p.songs.contains(song),
+        orElse: () => Playlist(id: 0, name: "Popular Tracks", songs: []),
+      )
+      .name;
+
+  return Container(
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+    decoration: BoxDecoration(
+      color: Colors.white.withOpacity(0.03),
+      borderRadius: BorderRadius.circular(14),
+    ),
+    child: ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: Colors.white10,
+          borderRadius: BorderRadius.circular(10),
+          image: song.image.isNotEmpty
+              ? DecorationImage(
+                  image: NetworkImage(song.image),
+                  fit: BoxFit.cover,
+                )
               : null,
         ),
-        title: Text(
-          song.title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 13,
-          ),
-        ),
-        subtitle: Text(
-          song.artist,
-          style: const TextStyle(color: Colors.white54, fontSize: 11),
-        ),
-        trailing: Text(
-          song.duration,
-          style: const TextStyle(color: Colors.white54, fontSize: 11),
-        ),
-        onTap: () {
-          // TODO: Play selected song via Provider
-          // context.read<MusicController>().playSong(song);
-        },
+        child: song.image.isEmpty
+            ? const Icon(Icons.music_note, color: Colors.white54)
+            : null,
       ),
-    );
-  }
+      title: Text(
+        song.title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 13,
+        ),
+      ),
+      subtitle: Text(
+        song.artist,
+        style: const TextStyle(color: Colors.white54, fontSize: 11),
+      ),
+      trailing: Text(
+        song.duration,
+        style: const TextStyle(color: Colors.white54, fontSize: 11),
+      ),
+      onTap: () {
+        // Start playing using Provider
+        Provider.of<PlayerProvider>(context, listen: false).playSong(song);
+
+        // Navigate to the player screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SongDetailScreen(
+              song: song,
+              playlistName: playlistName,
+            ),
+          ),
+        );
+      },
+    ),
+  );
+}
 
   // Create Playlist Dialog when "+ Create New" button is pressed
   void _showCreatePlaylistDialog(BuildContext context) {

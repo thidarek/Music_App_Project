@@ -36,6 +36,11 @@ dependencies:
   cupertino_icons: ^1.0.8
   provider: ^6.1.5+1
   audioplayers: ^6.8.1
+  video_player: ^2.10.0
+  video_player_win: ^3.2.2
+  youtube_player_flutter: ^10.0.1
+  youtube_player_iframe: ^6.0.2
+  url_launcher: ^6.1.11
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +63,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - lib/audios/nirkKrobVeaLea.mp4
 
   # To add assets to your application, add an assets section, like this:
   # assets:

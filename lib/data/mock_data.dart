@@ -8,69 +8,69 @@ List<Artist> artists = [
   Artist(
     id: 1,
     name: "The Weeknd",
-    image: "assets/images/artists/the_weeknd.jpg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0Ukrmk8AsNeQazOkSTLUFCtZtvpTlZ9mbK_kmUh5G2UxDzWzV5pvHxClpgY4sLTTSYlwDEpKGDRmo9lIgurbr8_2iMN0Z2yaDAea57pw&s=10",
     bio: "Canadian singer known for R&B, pop, and synthwave music.",
   ),
   Artist(
     id: 2,
     name: "Ed Sheeran",
-    image: "assets/images/artists/ed_sheeran.jpg",
+    image: "https://hips.hearstapps.com/hmg-prod/images/ed-sheeran-attends-the-f1-the-movie-european-premiere-at-news-photo-1757689303.pjpeg?crop=1.00xw:0.781xh;0,0.0385xh&resize=640:*",
     bio: "English singer-songwriter famous for acoustic pop hits.",
   ),
   Artist(
     id: 3,
     name: "Taylor Swift",
-    image: "assets/images/artists/taylor_swift.jpg",
+    image: "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcTT5BNeSJ9rJzAx0ssz8arC8yi8NWrar4TOAdsmWVluMkjOcVrM8cDRek7E8f2diXAtiyLheqewTLyICBQ",
     bio: "American singer-songwriter known for country and pop music.",
   ),
   Artist(
     id: 4,
     name: "Billie Eilish",
-    image: "assets/images/artists/billie_eilish.jpg",
+    image: "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTHNqOAZrIMqww39C5KMIai4Q_1U154DRZSNYZiyOhmija8giz2M1cU1Nft4_d45_nlAofwuA2H7bmvwMY",
     bio: "Grammy-winning artist recognized for her unique alternative pop style.",
   ),
-  Artist(
-    id: 5,
-    name: "Imagine Dragons",
-    image: "assets/images/artists/imagine_dragons.jpg",
-    bio: "American pop rock band best known for energetic anthems.",
-  ),
-  Artist(
-    id: 6,
-    name: "Dua Lipa",
-    image: "assets/images/artists/dua_lipa.jpg",
-    bio: "British-Albanian pop singer with multiple chart-topping songs.",
-  ),
+  // Artist(
+  //   id: 5,
+  //   name: "Imagine Dragons",
+  //   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0Ukrmk8AsNeQazOkSTLUFCtZtvpTlZ9mbK_kmUh5G2UxDzWzV5pvHxClpgY4sLTTSYlwDEpKGDRmo9lIgurbr8_2iMN0Z2yaDAea57pw&s=10",
+  //   bio: "American pop rock band best known for energetic anthems.",
+  // ),
+  // Artist(
+  //   id: 6,
+  //   name: "Dua Lipa",
+  //   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0Ukrmk8AsNeQazOkSTLUFCtZtvpTlZ9mbK_kmUh5G2UxDzWzV5pvHxClpgY4sLTTSYlwDEpKGDRmo9lIgurbr8_2iMN0Z2yaDAea57pw&s=10",
+  //   bio: "British-Albanian pop singer with multiple chart-topping songs.",
+  // ),
   Artist(
     id: 7,
     name: "Justin Bieber",
-    image: "assets/images/artists/justin_bieber.jpg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFQ1614eHneTTPuGNI6ubaSwvxRqSjY3IRdGXPEMVBH9HihdadQ2ty2FVEjIJmAEogCvneMd_EpyPWWnSUofpevxfKx9L9O3NAd6mSpg&s=10",
     bio: "Canadian pop singer with numerous international hits.",
   ),
   Artist(
     id: 8,
     name: "Adele",
-    image: "assets/images/artists/adele.jpg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBZsutpQn8Hb1aVSnrvSW_yhfr2B0vYKgy4y7c2jEKNIQtVOHiJ52Qm-gvybyo9hTaXeqbIvLDgDMd4HaYjpue8CTWMSwo6R5OMA0OIx0&s=10",
     bio: "British singer celebrated for her soulful voice and emotional ballads.",
   ),
   Artist(
     id: 9,
     name: "Bruno Mars",
-    image: "assets/images/artists/bruno_mars.jpg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5-f_ybMoiTZGNvCjQgCW_BSZs8gnN0wR7zja2O6FjBL0Odk2Ti2-aM2CVCZnaOmkbuHpz7QgpiZBZ-KEwS3p2GzL24h6Q9gscTQgqbQ&s=10",
     bio: "American singer-songwriter blending pop, funk, soul, and R&B.",
   ),
-  Artist(
-    id: 10,
-    name: "Maroon 5",
-    image: "assets/images/artists/maroon5.jpg",
-    bio: "American pop rock band led by vocalist Adam Levine.",
-  ),
-  Artist(
-  id: 11,
-  name: "ENHYPEN",
-  image: "assets/images/artists/enhypen.jpg",
-  bio: "South Korean boy group formed through the survival show I-LAND, known for songs like Bite Me, FEVER, Drunk-Dazed, and Sweet Venom.",
-),
+//   Artist(
+//     id: 10,
+//     name: "Maroon 5",
+//     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0Ukrmk8AsNeQazOkSTLUFCtZtvpTlZ9mbK_kmUh5G2UxDzWzV5pvHxClpgY4sLTTSYlwDEpKGDRmo9lIgurbr8_2iMN0Z2yaDAea57pw&s=10",
+//     bio: "American pop rock band led by vocalist Adam Levine.",
+//   ),
+//   Artist(
+//   id: 11,
+//   name: "ENHYPEN",
+//   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0Ukrmk8AsNeQazOkSTLUFCtZtvpTlZ9mbK_kmUh5G2UxDzWzV5pvHxClpgY4sLTTSYlwDEpKGDRmo9lIgurbr8_2iMN0Z2yaDAea57pw&s=10",
+//   bio: "South Korean boy group formed through the survival show I-LAND, known for songs like Bite Me, FEVER, Drunk-Dazed, and Sweet Venom.",
+// ),
 ];
 
 // Song
@@ -110,6 +110,15 @@ List<Song> songs = [
         "https://upload.wikimedia.org/wikipedia/en/7/7a/Adele_-_Someone_Like_You.png",
     video : "https://youtu.be/hLQl3WQQoQ0?si=iScxIl851xaQhwYM",
     duration: "4:45",
+  ),
+  Song(
+    id: 5,
+    title: "ខីងព្រោះស្រឡាញ់",
+    artist: "Sin Sisamuth",
+    image:
+        "https://upload.wikimedia.org/wikipedia/en/7/70/Lewis_Capaldi_-_Someone_You_Loved.png",
+    video: "lib/audios/nirkKrobVeaLea.mp4",
+    duration: "3:02",
   ),
   // Song(
   //   id: 5,
