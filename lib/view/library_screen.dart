@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 // import 'package:music_app_project/models/song.dart';
 // Import your dummy data file (e.g., data.dart or wherever artists, songs, playlists are exported)
 import 'package:music_app_project/data/mock_data.dart';
+import 'package:music_app_project/view/album.dart';
+import 'package:music_app_project/view/artist_screen.dart';
+import 'package:music_app_project/view/download.dart';
 import 'package:provider/provider.dart';
 import 'package:music_app_project/providers/favorite_provider.dart';
 import 'package:music_app_project/view/favorites_screen.dart';
@@ -103,7 +106,14 @@ class LibraryScreen extends StatelessWidget {
                       iconBgColor: Colors.white12,
                       title: 'Downloads',
                       subtitle: 'Available offline',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DownloadScreen(),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 10),
                     _buildCategoryTile(
@@ -111,7 +121,14 @@ class LibraryScreen extends StatelessWidget {
                       iconBgColor: Colors.white12,
                       title: 'Albums',
                       subtitle: '${playlists.length} Saved collections',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AlbumScreen(),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 10),
                     _buildCategoryTile(
@@ -119,7 +136,14 @@ class LibraryScreen extends StatelessWidget {
                       iconBgColor: Colors.white12,
                       title: 'Artists',
                       subtitle: 'Following $totalArtistsCount artists',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ArtistScreen(),
+                          ),
+                        );
+                      },
                     ),
 
                     const SizedBox(height: 24),
