@@ -113,7 +113,7 @@ List<Song> songs = [
   ),
   Song(
     id: 5,
-    title: "ខីងព្រោះស្រឡាញ់",
+    title: "នឹកគ្រប់វេលា",
     artist: "Sin Sisamuth",
     image:
         "https://upload.wikimedia.org/wikipedia/en/7/70/Lewis_Capaldi_-_Someone_You_Loved.png",

@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 // import 'package:music_app_project/models/song.dart';
 // Import your dummy data file (e.g., data.dart or wherever artists, songs, playlists are exported)
 import 'package:music_app_project/data/mock_data.dart';
+import 'package:provider/provider.dart';
+import 'package:music_app_project/providers/favorite_provider.dart';
+import 'package:music_app_project/view/favorites_screen.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -17,7 +20,9 @@ class LibraryScreen extends StatelessWidget {
     const secondaryTextColor = Color(0xFF8F9BB3);
 
     // Derived stats from your actual data model arrays
-    final favoriteSongsCount = songs.where((s) => s.isFavorite).length;
+    // Use FavoriteProvider if available to show accurate favorite count
+    // Fallback to 0 if provider not available in this context
+    final favoriteSongsCount = Provider.of<FavoriteProvider>(context).favoriteCount;
     final totalArtistsCount = artists.length;
 
     return Scaffold(
@@ -83,7 +88,14 @@ class LibraryScreen extends StatelessWidget {
                       iconBgColor: primaryPurple,
                       title: 'Favorite Songs',
                       subtitle: '$favoriteSongsCount tracks',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const FavoritesScreen(),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 10),
                     _buildCategoryTile(
