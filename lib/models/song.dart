@@ -3,6 +3,7 @@ class Song {
   String title;
   String artist;
   String image;
+  String video;
   String duration;
   bool isFavorite;
 
@@ -11,6 +12,7 @@ class Song {
     required this.title,
     required this.artist,
     required this.image,
+    required this.video,
     required this.duration,
     this.isFavorite = false,
   });

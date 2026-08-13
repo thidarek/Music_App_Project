@@ -8,7 +8,7 @@ class PlaylistProvider extends ChangeNotifier {
   List<Playlist> get playlists => _playlists;
   
   // Get playlist by ID
-  Playlist? getPlaylistById(String id) {
+  Playlist? getPlaylistById(int id) {
     try {
       return _playlists.firstWhere((playlist) => playlist.id == id);
     } catch (e) {
@@ -17,13 +17,13 @@ class PlaylistProvider extends ChangeNotifier {
   }
 
   // Get songs from a playlist
-  List<Song> getPlaylistSongs(String playlistId) {
+  List<Song> getPlaylistSongs(int playlistId) {
     final playlist = getPlaylistById(playlistId);
     return playlist?.songs ?? [];
   }
 
   // Get song IDs from a playlist
-  List<int> getPlaylistSongIds(String playlistId) {
+  List<int> getPlaylistSongIds(int playlistId) {
     final playlist = getPlaylistById(playlistId);
     return playlist?.songs.map((song) => song.id).toList() ?? [];
   }
@@ -31,7 +31,7 @@ class PlaylistProvider extends ChangeNotifier {
   // Create a new playlist
   void createPlaylist(String name, {String? description, List<Song>? initialSongs}) {
     final playlist = Playlist(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: DateTime.now().millisecondsSinceEpoch,
       name: name,
       songs: initialSongs ?? [],
     );
@@ -40,13 +40,13 @@ class PlaylistProvider extends ChangeNotifier {
   }
 
   // Delete a playlist
-  void deletePlaylist(String playlistId) {
+  void deletePlaylist(int playlistId) {
     _playlists.removeWhere((playlist) => playlist.id == playlistId);
     notifyListeners();
   }
 
   // Rename a playlist
-  void renamePlaylist(String playlistId, String newName) {
+  void renamePlaylist(int playlistId, String newName) {
     final index = _playlists.indexWhere((p) => p.id == playlistId);
     if (index != -1) {
       final playlist = _playlists[index];
@@ -60,7 +60,7 @@ class PlaylistProvider extends ChangeNotifier {
   }
 
   // Add song to playlist
-  void addSongToPlaylist(String playlistId, Song song) {
+  void addSongToPlaylist(int playlistId, Song song) {
     final index = _playlists.indexWhere((p) => p.id == playlistId);
     if (index != -1) {
       final playlist = _playlists[index];
@@ -77,7 +77,7 @@ class PlaylistProvider extends ChangeNotifier {
   }
 
   // Add multiple songs to playlist
-  void addSongsToPlaylist(String playlistId, List<Song> songs) {
+  void addSongsToPlaylist(int playlistId, List<Song> songs) {
     final index = _playlists.indexWhere((p) => p.id == playlistId);
     if (index != -1) {
       final playlist = _playlists[index];
@@ -97,7 +97,7 @@ class PlaylistProvider extends ChangeNotifier {
   }
 
   // Remove song from playlist
-  void removeSongFromPlaylist(String playlistId, int songId) {
+  void removeSongFromPlaylist(int playlistId, int songId) {
     final index = _playlists.indexWhere((p) => p.id == playlistId);
     if (index != -1) {
       final playlist = _playlists[index];
@@ -112,7 +112,7 @@ class PlaylistProvider extends ChangeNotifier {
   }
 
   // Remove multiple songs from playlist
-  void removeSongsFromPlaylist(String playlistId, List<int> songIds) {
+  void removeSongsFromPlaylist(int playlistId, List<int> songIds) {
     final index = _playlists.indexWhere((p) => p.id == playlistId);
     if (index != -1) {
       final playlist = _playlists[index];
@@ -128,13 +128,13 @@ class PlaylistProvider extends ChangeNotifier {
   }
 
   // Check if song is in playlist
-  bool isSongInPlaylist(String playlistId, int songId) {
+  bool isSongInPlaylist(int playlistId, int songId) {
     final playlist = getPlaylistById(playlistId);
     return playlist?.songs.any((s) => s.id == songId) ?? false;
   }
 
   // Clear all songs from playlist
-  void clearPlaylist(String playlistId) {
+  void clearPlaylist(int playlistId) {
     final index = _playlists.indexWhere((p) => p.id == playlistId);
     if (index != -1) {
       final playlist = _playlists[index];
@@ -148,13 +148,13 @@ class PlaylistProvider extends ChangeNotifier {
   }
 
   // Get playlist song count
-  int getPlaylistSongCount(String playlistId) {
+  int getPlaylistSongCount(int playlistId) {
     final playlist = getPlaylistById(playlistId);
     return playlist?.songs.length ?? 0;
   }
 
   // Move song to different position in playlist
-  void reorderSongs(String playlistId, int oldIndex, int newIndex) {
+  void reorderSongs(int playlistId, int oldIndex, int newIndex) {
     final index = _playlists.indexWhere((p) => p.id == playlistId);
     if (index != -1) {
       final playlist = _playlists[index];
@@ -176,11 +176,11 @@ class PlaylistProvider extends ChangeNotifier {
   }
 
   // Create a copy of a playlist
-  void duplicatePlaylist(String playlistId, String newName) {
+  void duplicatePlaylist(int playlistId, String newName) {
     final playlist = getPlaylistById(playlistId);
     if (playlist != null) {
       final newPlaylist = Playlist(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        id: DateTime.now().millisecondsSinceEpoch,
         name: newName,
         songs: List<Song>.from(playlist.songs),
       );
