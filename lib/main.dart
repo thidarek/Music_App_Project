@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:music_app_project/providers/auth_provider.dart';
+import 'package:music_app_project/view/login.dart';
+import 'package:music_app_project/view/register.dart';
 import 'package:music_app_project/widgets/custom_bottom_nav.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +20,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => PlayerProvider()),
         ChangeNotifierProvider(create: (_) => PlaylistProvider()),
         ChangeNotifierProvider(create: (_) => SearchProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()), // Add AuthProvider
       ],
       child: MyApp(),
     ),
@@ -30,7 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const CustomBottomNav(),
+      home: Login(),
     );
   }
 }

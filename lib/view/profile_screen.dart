@@ -1,29 +1,22 @@
+// lib/screens/profile_screen.dart
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
+import '../view/login.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   // ---------------------------------------------------------------------
-  // MOCK DATA — replace with real data via a ProfileProvider.
+  // MOCK DATA & CONSTANTS
   // ---------------------------------------------------------------------
-
-  // PROVIDER: context.watch<ProfileProvider>().name
-  static const String _userName = 'Alex Rivers';
-  // PROVIDER: context.watch<ProfileProvider>().email
-  static const String _userEmail = 'alex.rivers@melody.hi-fi';
-  // PROVIDER: context.watch<ProfileProvider>().isPremium
   static const bool _isPremium = true;
-
-  // PROVIDER: these four could come from ProfileProvider (or be derived
-  // from PlaylistProvider/FavoriteProvider counts instead of stored here).
   static const String _hoursListened = '1,284';
   static const String _favoriteGenre = 'Electronic';
   static const String _playlistCount = '42';
   static const String _followingCount = '842';
-
-  // PROVIDER: context.watch<ProfileProvider>().subscriptionExpiry
   static const String _premiumExpiry = 'Oct 2025';
-  // PROVIDER: context.watch<ProfileProvider>().audioQuality
   static const String _audioQuality = 'High-Fidelity';
 
   static const Color _background = Color(0xFF0D1220);
@@ -36,6 +29,13 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 1. Fetch current logged in user from AuthProvider
+    final authProvider = context.watch<AuthProvider>();
+    final currentUser = authProvider.currentUser;
+
+    final String userName = currentUser?.name ?? 'Guest User';
+    final String userEmail = currentUser?.email ?? 'guest@example.com';
+
     return Container(
       color: _background,
       child: SafeArea(
@@ -45,7 +45,7 @@ class ProfileScreen extends StatelessWidget {
           children: [
             _buildHeader(context),
             const SizedBox(height: 24),
-            _buildAvatarSection(context),
+            _buildAvatarSection(context, userName: userName, userEmail: userEmail),
             const SizedBox(height: 20),
             _buildStatsGrid(),
             const SizedBox(height: 20),
@@ -91,8 +91,6 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Row(
       children: [
-        // PROVIDER: swap for NetworkImage(profile.avatarUrl) once real
-        // user photos are available.
         const CircleAvatar(
           radius: 18,
           backgroundColor: _cardSurface,
@@ -108,13 +106,11 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        // Notification bell — tappable.
         _buildIconButton(
           icon: Icons.notifications_none,
           onTap: () => _onNotificationsTap(context),
         ),
         const SizedBox(width: 8),
-        // Settings gear — tappable, opens app-wide settings.
         _buildIconButton(
           icon: Icons.settings_outlined,
           onTap: () => _onSettingsTap(context),
@@ -127,8 +123,6 @@ class ProfileScreen extends StatelessWidget {
     required IconData icon,
     required VoidCallback onTap,
   }) {
-    // Wrapped in an explicit transparent Material so the ripple always
-    // shows, regardless of what ancestor widget this ends up nested in.
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -142,9 +136,12 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  /// Large centered avatar with a pink ring, tappable to change photo,
-  /// plus name, email, and a premium badge overlapping the bottom edge.
-  Widget _buildAvatarSection(BuildContext context) {
+  /// Avatar section displaying dynamic user details from AuthProvider
+  Widget _buildAvatarSection(
+    BuildContext context, {
+    required String userName,
+    required String userEmail,
+  }) {
     return Column(
       children: [
         Material(
@@ -153,7 +150,6 @@ class ProfileScreen extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             borderRadius: BorderRadius.circular(60),
-            // Tapping the avatar itself opens photo change flow.
             onTap: () => _onAvatarTap(context),
             child: Stack(
               alignment: Alignment.bottomCenter,
@@ -171,11 +167,9 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   child: const CircleAvatar(
                     backgroundColor: _cardSurface,
-                    // PROVIDER: swap for NetworkImage(profile.avatarUrl).
                     child: Icon(Icons.person, color: _textSecondary, size: 48),
                   ),
                 ),
-                // Premium badge, overlapping the bottom of the avatar ring.
                 if (_isPremium)
                   Positioned(
                     bottom: -12,
@@ -211,25 +205,27 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 22),
-        const Text(
-          _userName,
-          style: TextStyle(
+        
+        // Dynamically displays current logged-in user name
+        Text(
+          userName,
+          style: const TextStyle(
             color: _textPrimary,
             fontSize: 24,
             fontWeight: FontWeight.w700,
           ),
         ),
         const SizedBox(height: 4),
-        const Text(
-          _userEmail,
-          style: TextStyle(color: _textSecondary, fontSize: 13),
+        
+        // Dynamically displays current logged-in user email
+        Text(
+          userEmail,
+          style: const TextStyle(color: _textSecondary, fontSize: 13),
         ),
       ],
     );
   }
 
-  /// 2x2 grid of stat cards: hours listened, favorite genre, playlists,
-  /// following count.
   Widget _buildStatsGrid() {
     return Column(
       children: [
@@ -309,7 +305,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  /// Gradient "Premium Membership" card with a "MANAGE PLAN" button.
   Widget _buildPremiumCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -339,11 +334,8 @@ class ProfileScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          // PROVIDER: build this string from profile.subscriptionExpiry
-          // once real subscription data exists.
           Text(
-            'Your subscription is active until $_premiumExpiry. '
-            'Enjoy Hi-Fi audio and unlimited offline downloads.',
+            'Your subscription is active until $_premiumExpiry. Enjoy Hi-Fi audio and unlimited offline downloads.',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 13,
@@ -351,7 +343,6 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          // "MANAGE PLAN" button, tappable.
           InkWell(
             borderRadius: BorderRadius.circular(24),
             onTap: () => _onManagePlanTap(context),
@@ -389,8 +380,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  /// One tappable settings row: leading icon in a rounded square, label,
-  /// optional trailing value text, and an optional chevron.
   Widget _buildSettingsRow(
     BuildContext context, {
     required IconData icon,
@@ -454,54 +443,44 @@ class ProfileScreen extends StatelessWidget {
   }
 
   // ---------------------------------------------------------------------
-  // TAP HANDLERS — replace each body with real navigation once the
-  // destination screens exist. Left as clear TODOs so the UI is fully
-  // interactive (ripple + callback) without depending on unbuilt screens.
+  // ACTIONS & NAVIGATION
   // ---------------------------------------------------------------------
 
   void _onNotificationsTap(BuildContext context) {
-    // TODO: Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()));
-    // Temporary visible feedback so the tap is confirmable before
-    // NotificationsScreen exists — remove once real navigation is wired.
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Notifications tapped')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Notifications tapped')),
+    );
   }
 
   void _onSettingsTap(BuildContext context) {
-    // TODO: Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen()));
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Settings tapped')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Settings tapped')),
+    );
   }
 
-  void _onAvatarTap(BuildContext context) {
-    // TODO: open image picker / photo change flow, then update via
-    // context.read<ProfileProvider>().updateAvatar(newImage).
-  }
+  void _onAvatarTap(BuildContext context) {}
 
   void _onManagePlanTap(BuildContext context) {
-    // TODO: Navigator.push(context, MaterialPageRoute(builder: (_) => const ManagePlanScreen()));
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Manage plan tapped')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Manage plan tapped')),
+    );
   }
 
-  void _onPersonalInfoTap(BuildContext context) {
-    // TODO: Navigator.push(context, MaterialPageRoute(builder: (_) => const PersonalInfoScreen()));
-  }
+  void _onPersonalInfoTap(BuildContext context) {}
 
-  void _onAudioQualityTap(BuildContext context) {
-    // TODO: show a selection sheet/dialog for audio quality, then call
-    // context.read<ProfileProvider>().setAudioQuality(selected).
-  }
+  void _onAudioQualityTap(BuildContext context) {}
 
-  void _onListeningHistoryTap(BuildContext context) {
-    // TODO: Navigator.push(context, MaterialPageRoute(builder: (_) => const ListeningHistoryScreen()));
-  }
+  void _onListeningHistoryTap(BuildContext context) {}
 
+  // Handles Logout & Returns to Login Screen
   void _onLogOutTap(BuildContext context) {
-    // TODO: show a confirmation dialog, then call an auth provider's
-    // logOut() method and navigate back to the login/register screen.
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    authProvider.logout();
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+      (route) => false,
+    );
   }
 }
