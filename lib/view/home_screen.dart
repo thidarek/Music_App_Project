@@ -42,10 +42,7 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Welcome Back',
-                        style: TextStyle(
-                          color: textSecondary,
-                          fontSize: 12,
-                        ),
+                        style: TextStyle(color: textSecondary, fontSize: 12),
                       ),
                       Text(
                         'Good Evening',
@@ -57,11 +54,11 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const Spacer(),
-                  IconButton(
-                    icon: const Icon(Icons.notifications_none, color: Colors.white),
-                    onPressed: () {},
-                  ),
+                  // const Spacer(),
+                  // IconButton(
+                  //   icon: const Icon(Icons.notifications_none, color: Colors.white),
+                  //   onPressed: () {},
+                  // ),
                 ],
               ),
             ),
@@ -77,8 +74,7 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: 8),
 
                     // Search Bar Visual Accent
-                    _SearchBarWidget(),
-
+                    // _SearchBarWidget(),
                     SizedBox(height: 20),
 
                     // Featured Banner Section
@@ -110,48 +106,47 @@ class HomeScreen extends StatelessWidget {
 }
 
 // Helper method to navigate to details cleanly
-void _navigateToSongDetail(BuildContext context, Song song, {String playlistName = "Now Playing"}) {
+void _navigateToSongDetail(
+  BuildContext context,
+  Song song, {
+  String playlistName = "Now Playing",
+}) {
   Provider.of<PlayerProvider>(context, listen: false).playSong(song);
 
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => SongDetailScreen(
-        song: song,
-        playlistName: playlistName,
-      ),
+      builder: (context) =>
+          SongDetailScreen(song: song, playlistName: playlistName),
     ),
   );
 }
 
-// ==================== SEARCH BAR ====================
-class _SearchBarWidget extends StatelessWidget {
-  const _SearchBarWidget();
+// // ==================== SEARCH BAR ====================
+// class _SearchBarWidget extends StatelessWidget {
+//   const _SearchBarWidget();
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: HomeScreen.cardColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: const [
-          Icon(Icons.search, color: HomeScreen.textSecondary, size: 20),
-          SizedBox(width: 12),
-          Text(
-            'Search songs, artists, or albums...',
-            style: TextStyle(
-              color: HomeScreen.textSecondary,
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+//       decoration: BoxDecoration(
+//         color: HomeScreen.cardColor,
+//         borderRadius: BorderRadius.circular(16),
+//       ),
+//       child: Row(
+//         children: const [
+//           Icon(Icons.search, color: HomeScreen.textSecondary, size: 20),
+//           SizedBox(width: 12),
+//           Text(
+//             'Search songs, artists, or albums...',
+//             style: TextStyle(color: HomeScreen.textSecondary, fontSize: 14),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 // ==================== FEATURED BANNER ====================
 class _FeaturedBanner extends StatelessWidget {
@@ -217,20 +212,30 @@ class _FeaturedBanner extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: () {
                 if (featuredSong != null) {
-                  _navigateToSongDetail(context, featuredSong, playlistName: "Featured Track");
+                  _navigateToSongDetail(
+                    context,
+                    featuredSong,
+                    playlistName: "Featured Track",
+                  );
                 }
               },
               icon: const Icon(Icons.play_arrow, color: Colors.white, size: 18),
               label: const Text(
                 'Play Now',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: HomeScreen.primaryPurple,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
@@ -305,7 +310,11 @@ class _ArtistAvatar extends StatelessWidget {
                         width: 60,
                         height: 60,
                         color: HomeScreen.cardColor,
-                        child: const Icon(Icons.person, color: Colors.white54, size: 28),
+                        child: const Icon(
+                          Icons.person,
+                          color: Colors.white54,
+                          size: 28,
+                        ),
                       ),
                     )
                   : Container(
@@ -315,7 +324,11 @@ class _ArtistAvatar extends StatelessWidget {
                         color: HomeScreen.cardColor,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.person, color: Colors.white54, size: 28),
+                      child: const Icon(
+                        Icons.person,
+                        color: Colors.white54,
+                        size: 28,
+                      ),
                     ),
             ),
             const SizedBox(height: 6),
@@ -451,7 +464,10 @@ class _SongCard extends StatelessWidget {
           children: [
             Text(
               song.duration,
-              style: const TextStyle(color: HomeScreen.textSecondary, fontSize: 12),
+              style: const TextStyle(
+                color: HomeScreen.textSecondary,
+                fontSize: 12,
+              ),
             ),
             const SizedBox(width: 8),
             IconButton(
@@ -479,7 +495,9 @@ class _MiniPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer2<PlayerProvider, FavoriteProvider>(
       builder: (context, playerProvider, favoriteProvider, child) {
-        final currentSong = playerProvider.currentSong ?? (songs.isNotEmpty ? songs.first : null);
+        final currentSong =
+            playerProvider.currentSong ??
+            (songs.isNotEmpty ? songs.first : null);
 
         if (currentSong == null) return const SizedBox.shrink();
 

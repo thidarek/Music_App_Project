@@ -6,6 +6,7 @@ class Song {
   String video;
   String duration;
   bool isFavorite;
+  
 
   Song({
     required this.id,
